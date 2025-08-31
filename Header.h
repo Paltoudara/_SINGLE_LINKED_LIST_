@@ -812,7 +812,7 @@ private:
 		//else we delete the node successfuly
 		static_assert(std::is_nothrow_destructible_v<_Ty>, "the type must be"
 			"destructible without throwing");
-		if (pos == cend())return false;
+		if (pos.ptr==nullptr||pos.ptr->next==nullptr)return false;
 		list_node* curr{ head };
 		bool is_valid = false;
 		while (curr != nullptr) {
@@ -824,7 +824,6 @@ private:
 								 "position" };
 		}
 		count--;
-		if (pos.ptr->next == nullptr)return false;
 		list_node* ptr{ pos.ptr->next };
 		pos.ptr->next = ptr->next;
 		if (ptr->next == nullptr) {
@@ -1079,9 +1078,8 @@ public:
 		//undefined
 		static_assert(std::is_nothrow_destructible_v<_Ty>, "the type must be"
 			"destructible without throwing");
-		if (pos == cend())return false;
+		if (pos.ptr==nullptr ||pos.ptr->next==nullptr)return false;
 		count--;
-		if (pos.ptr->next == nullptr)return false;
 		list_node* ptr{ pos.ptr->next };
 		pos.ptr->next = ptr->next;
 		if (ptr->next == nullptr) {
