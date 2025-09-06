@@ -77,6 +77,7 @@ private:
 	//Also one last thing, when the iterator is nullptr all the operations 
 	// supported will not work if you call them for this iterator
 	//because its nullptr now assign it to point to a valid node
+	template<bool value>
 	class list_node_iterator final {
 	private:
 		list_node* ptr;
@@ -121,6 +122,7 @@ private:
 			throw tried_to_access_an_empty_iterator_{ "tried to access an empty iterator" };
 		}
 		//
+		template<typename =std::enable_if_t<value>>
 		_Ty& operator *()& {
 			if (ptr != nullptr) {
 				return ptr->data;
@@ -135,6 +137,7 @@ private:
 			throw tried_to_access_an_empty_iterator_{ "tried to access an empty iterator" };
 		}
 		//
+		template<typename =std::enable_if_t<value>>
 		_Ty&& operator *()&& {
 			if (ptr != nullptr) {
 				return std::move(ptr->data);
@@ -156,6 +159,7 @@ private:
 			throw tried_to_access_an_empty_iterator_{ "tried to access an empty iterator" };
 		}
 		//
+		template<typename=std::enable_if_t<value>>
 		_Ty* operator ->()& {
 			if (ptr != nullptr) {
 				return std::addressof(ptr->data);
@@ -170,6 +174,7 @@ private:
 			throw tried_to_access_an_empty_iterator_{ "tried to access an empty iterator" };
 		}
 		//
+		template<typename = std::enable_if_t<value>>
 		_Ty* operator ->()&& {
 			if (ptr != nullptr) {
 				return std::addressof(ptr->data);
@@ -205,135 +210,12 @@ private:
 			ptr = nullptr;
 		}
 	};
-	// This is a custom const_iterator class.
-	// It acts as a lightweight wrapper around a raw pointer to a list node.
-	// 
-	// Supported operations:
-	// - operator++       : Advances the iterator to the next node.
-	// - operator+=       : Advances the iterator forward by a given number of steps.
-	// - operator*        : Dereferences the iterator to access the node's data.
-	// - operator==/!=    : Compares two iterators for equality.
-	// - operator ->      : used to access the methods of the containd object.
-	// - operator +       : Just to return a temporary iterator to a position forward.
-	// - Reference qualifiers are applied where appropriate.
-	// 
-	// ATTENTION:
-	// This iterator does not track validity. If it becomes invalidated 
-	// (e.g., due to node removal), it is your responsibility to ensure it 
-	// is not used in that state. Use the iterator only when you are certain 
-	// it points to a valid node or is `nullptr`. 
-	// ,pretty much all that matters is where the pointer
-	//shows and remember this iterator is only to get the element not change it  
-	//Also one last thing, when the iterator is nullptr all the operations 
-	// supported will not work if you call them for this iterator
-	//because its nullptr now assign it to point to a valid node 
-	class list_node_const_iterator final {
-	private:
-		list_node* ptr;
-		friend single_linked_list<_Ty>;
-	public:
-		//
-		list_node_const_iterator()noexcept :ptr{} {}
-		//
-		list_node_const_iterator(list_node* ptr1)noexcept :ptr{ ptr1 } {}
-		//
-		list_node_const_iterator(const list_node_const_iterator& other)noexcept = default;
-		//
-		list_node_const_iterator(list_node_const_iterator&& other)noexcept = default;
-		//
-		list_node_const_iterator operator ++() noexcept {
-			if (ptr != nullptr) {
-				ptr = ptr->next;
-			}
-			return list_node_const_iterator{ ptr };
-		}
-		//
-		list_node_const_iterator operator ++(int)noexcept {
-			list_node_const_iterator tmp{ ptr };
-			if (ptr != nullptr) {
-				ptr = ptr->next;
-			}
-			return tmp;
-		}
-		//
-		bool operator !=(const list_node_const_iterator& other)const noexcept {
-			return ptr != other.ptr;
-		}
-		//
-		bool operator ==(const list_node_const_iterator& other)const noexcept {
-			return ptr == other.ptr;
-		}
-		//
-		const _Ty& operator *()const& {
-			if (ptr != nullptr) {
-				return ptr->data;
-			}
-			throw tried_to_access_an_empty_iterator_{ "tried to access an empty iterator" };
-		}
-		//
-		const _Ty&& operator *()const&& {
-			if (ptr != nullptr) {
-				return std::move(ptr->data);
-			}
-			throw tried_to_access_an_empty_iterator_{ "tried to access an empty iterator" };
-		}
-		//
-		list_node_const_iterator operator +=(std::size_t counter)noexcept {
-			for (std::size_t i = 0; i < counter; i++) {
-				if (ptr != nullptr)ptr = ptr->next;
-				else break;
-			}
-			return list_node_const_iterator{ ptr };
-		}
-		//
-		const _Ty* operator ->()const& {
-			if (ptr != nullptr) {
-				return std::addressof(ptr->data);
-			}
-			throw tried_to_access_an_empty_iterator_{ "tried to access an empty iterator" };
-		}
-		//
-		const _Ty* operator ->()const&& {
-			if (ptr != nullptr) {
-				return std::addressof(ptr->data);
-			}
-			throw tried_to_access_an_empty_iterator_{ "tried to access an empty iterator" };
-		}
-		//
-		list_node_const_iterator operator +(std::size_t counter)const noexcept {
-			list_node* curr{ ptr };
-			for (std::size_t i = 0; i < counter; i++) {
-				if (curr != nullptr)curr = curr->next;
-				else break;
-			}
-			return list_node_const_iterator{ curr };
-		}
-		//
-		friend list_node_const_iterator operator +(std::size_t counter, const
-			list_node_const_iterator& it)noexcept {
-			return it + counter;
-		}
-		//
-		list_node_const_iterator operator =(const list_node_const_iterator& other)noexcept {
-			ptr = other.ptr;
-			return *this;
-		}
-		//
-		list_node_const_iterator operator =(list_node_const_iterator&& other)noexcept {
-			ptr = other.ptr;
-			return *this;
-		}
-		//
-		~list_node_const_iterator()noexcept {
-			ptr = nullptr;
-		}
-	};
 	// private members
 	list_node* head;
 	list_node* tail;
 	std::size_t count;
 	//
-	//push_back_node done 
+	//push_back_node done// 
 	template<typename _Valty>
 	bool push_back_node(_Valty&& _Val)
 	{//push back node it simply creates a new node and
@@ -354,7 +236,7 @@ private:
 		return false;
 
 	}
-	//push_front_node done 
+	//push_front_node done// 
 	template<typename _Valty>
 	bool push_front_node(_Valty&& _Val)
 	{//it simply creates a new node and pushes it to the start of the list
@@ -370,7 +252,7 @@ private:
 		}
 		return false;
 	}
-	//pop_front_node done
+	//pop_front_node done//
 	void pop_front_node()
 	{
 		//if count==0 throws
@@ -389,7 +271,7 @@ private:
 		}
 		throw pop_from_an_empty_list{ "tried to pop from an empty list" };
 	}
-	//pop_back_node done 
+	//pop_back_node done// 
 	void pop_back_node()
 	{//if the list is empty throws
 		//if we have one node delete tail; head=tail=nullptr;l count --;
@@ -413,7 +295,7 @@ private:
 		}
 		throw pop_from_an_empty_list{ "tried to pop from an empty list" };
 	}
-	//clear done 
+	//clear done//
 	void clear()noexcept {//this deallocates the linked list 
 		static_assert(std::is_nothrow_destructible_v<_Ty>,
 			"the object must be destructible and must not throw exception");
@@ -428,7 +310,7 @@ private:
 		tail = nullptr;
 		count = 0;
 	}
-	//reverse_list_node done 
+	//reverse_list_node done//
 	void reverse_linked_list()noexcept
 	{//if we have one node return 
 		//if we have more than we are goint to reverse the listt
@@ -457,7 +339,7 @@ private:
 		return;
 	}
 	//insert_element done//
-	bool insert_element(list_node_const_iterator pos, const _Ty& data)
+	bool insert_element(list_node_iterator<false> pos, const _Ty& data)
 	{
 		//this is an insert function
 		//there are three scenarios
@@ -469,7 +351,10 @@ private:
 		list_node* curr{ head };
 		bool is_valid = false;
 		while (curr != nullptr) {
-			if (curr == pos.ptr)is_valid = true;//we see if the pos.ptr address is the same
+			if (curr == pos.ptr) {
+				is_valid = true;
+				break;
+			}//we see if the pos.ptr address is the same
 			//with the nodes of our list if it is not then it is not a valid pos 
 			curr = curr->next;
 		}
@@ -492,9 +377,9 @@ private:
 		pos.ptr->next = ptr;
 		return true;
 	}
-	//add_unique_node done// 
+	//add_unique_node done//
 	template<typename _Pred1>
-	bool add_unique_node(list_node_const_iterator pos, const _Ty& data, _Pred1 _Pred) {
+	bool add_unique_node(list_node_iterator<false> pos, const _Ty& data, _Pred1 _Pred) {
 		//this function pretty much uses the same tactic as the insert function above
 		//the only difference is that we check if the element is in the list 
 		//if it is not then we insert it
@@ -506,7 +391,10 @@ private:
 		list_node* curr{ head };
 		bool  is_valid = false;
 		while (curr != nullptr) {
-			if (curr == pos.ptr)is_valid = true;//we see if the pos.ptr address is the same
+			if (curr == pos.ptr) {
+				is_valid = true;
+				break;
+			}//we see if the pos.ptr address is the same
 			//with the nodes of our list if it is not then it is not a valid pos 
 			curr = curr->next;
 		}
@@ -570,7 +458,7 @@ private:
 		//because curr will be nullptr 
 		return;
 	}
-	//erase_node_if func done 
+	//erase_node_if func done// 
 	template<typename _Pr1>
 	void erase_node_if(_Pr1 _Pred) {
 		//this func in simple terms deletes an element from a list
@@ -646,46 +534,6 @@ private:
 		}
 		return false;
 	}
-	//start func done// 
-	list_node_iterator start()const noexcept {
-		//start of the list 
-		return head;
-	}
-	//start func done// 
-	list_node_iterator start()noexcept {
-		//start of the list 
-		return head;
-	}
-	//finish func done// 
-	list_node_iterator finish()noexcept {
-		//end of the list
-		return nullptr;
-	}
-	//finish func done// 
-	list_node_iterator finish()const noexcept {
-		//end of the list 
-		return nullptr;
-	}
-	//cstart func done// 
-	list_node_const_iterator cstart()const noexcept {
-		//start of the list 
-		return head;
-	}
-	//cstart func done //
-	list_node_const_iterator cstart()noexcept {
-		//start of the list 
-		return head;
-	}
-	//cfinish func done// 
-	list_node_const_iterator cfinish()noexcept {
-		//end of the list
-		return nullptr;
-	}
-	//cfinish func done// 
-	list_node_const_iterator cfinish()const noexcept {
-		//end of the list 
-		return nullptr;
-	}
 	//merge_lists func done// 
 	template<typename Compare>
 	void merge_lists(single_linked_list<_Ty>& other, Compare comp) {
@@ -706,12 +554,14 @@ private:
 		if (this == &other)return;
 		if (other.empty())return;
 		if (!is_ascending_(comp) || !other.is_ascending_(comp))return;
-		count += other.count;
+		//
 		list_node* Head{ new(std::nothrow) list_node {} };
 		if (Head == nullptr)return;
 		list_node* ptr{ Head };
 		list_node* curr1{ head };
 		list_node* curr2{ other.head };
+		//the comparator should not throw otherwise 
+		//this function will leave the lists in ill form
 		while (curr1 != nullptr && curr2 != nullptr) {
 			if (comp(std::as_const(curr1->data), std::as_const(curr2->data))) {
 				ptr->next = curr1;
@@ -733,6 +583,7 @@ private:
 			ptr->next = curr1;
 			//the tail already points where we want it to be
 		}
+		count += other.count;
 		head = Head->next;
 		delete Head;//don't forget to delete the extra node
 		other.head = other.tail = nullptr;
@@ -748,14 +599,14 @@ private:
 		//the comp func should be a func that can be called by two args const _Ty&
 		//and const _Ty& and the return type should be bool else the behavior is undefined
 		if (count < 2)return true;
-		iterator prev = begin();
-		iterator curr = begin() + 1;
-		while (curr != end() && comp(std::as_const(*prev), std::as_const(*curr)))//<= 
+		list_node* prev{ head };
+		list_node* curr{ head->next };
+		while (curr != nullptr && comp(std::as_const(prev->data), std::as_const(curr->data)))//<= 
 		{
-			prev++;
-			curr++;
+			prev = curr;
+			curr = curr->next;
 		}
-		if (curr != end())return false;//we are not at the end so not in ascending order
+		if (curr != nullptr)return false;//we are not at the end so not in ascending order
 		return true;
 	}
 	//is_descending_ func done// 
@@ -768,14 +619,14 @@ private:
 		//the comp func should be a func that can be called by two args const _Ty&
 		//and const _Ty& and the return type should be bool else the behavior is undefined
 		if (count < 2)return true;
-		iterator prev = begin();
-		iterator curr = begin() + 1;
-		while (curr != end() && comp(std::as_const(*prev), std::as_const(*curr)))//>= 
+		list_node* prev{ head };
+		list_node* curr{ head->next };
+		while (curr != nullptr && comp(std::as_const(prev->data), std::as_const(curr->data)))//>= 
 		{
-			prev++;
-			curr++;
+			prev = curr;
+			curr = curr->next;
 		}
-		if (curr != end())return false;//we are not at the end so not in descending order
+		if (curr != nullptr)return false;//we are not at the end so not in descending order
 		return true;
 	}
 	//is_sorted_ func// 
@@ -789,21 +640,21 @@ private:
 		//the comp funcs should be funcs that can be called by two args const _Ty&
 		//and const _Ty& and the return type should be bool else the behavior is undefined
 		if (count < 2)return true;
-		iterator prev = begin();
-		iterator curr = begin() + 1;
+		list_node* prev{ head };
+		list_node* curr{ head->next };
 		bool asc = true;
 		bool desc = true;
 		//this checks in one pass if they are sorted 
-		while (curr != end()) {
-			asc = asc && comp1(std::as_const(*prev), std::as_const(*curr));//<=
-			desc = desc && comp2(std::as_const(*prev), std::as_const(*curr));//>=
-			prev++;
-			curr++;
+		while (curr != nullptr) {
+			asc = asc && comp1(std::as_const(prev->data), std::as_const(curr->data));//<=
+			desc = desc && comp2(std::as_const(prev->data), std::as_const(curr->data));//>=
+			prev = curr;
+			curr = curr->next;
 		}
 		return asc || desc;
 	}
 	//erase func done//
-	bool erase(list_node_const_iterator pos) {
+	bool erase(list_node_iterator<false> pos) {
 		//this is an erase function that deletes the element after the pos you gave
 		//we check if the iterator is nullptr or it points to a node
 		//note that the iterator must point to the list that called the method and 
@@ -812,11 +663,14 @@ private:
 		//else we delete the node successfuly
 		static_assert(std::is_nothrow_destructible_v<_Ty>, "the type must be"
 			"destructible without throwing");
-		if (pos.ptr==nullptr||pos.ptr->next==nullptr)return false;
+		if (pos.ptr == nullptr || pos.ptr->next == nullptr)return false;
 		list_node* curr{ head };
 		bool is_valid = false;
 		while (curr != nullptr) {
-			if (pos.ptr == curr)is_valid = true;
+			if (pos.ptr == curr) {
+				is_valid = true;
+				break;
+			}
 			curr = curr->next;
 		}
 		if (!is_valid) {
@@ -833,8 +687,8 @@ private:
 		return true;
 	}
 public:
-	using const_iterator = list_node_const_iterator;
-	using iterator = list_node_iterator;
+	using iterator = list_node_iterator<true>;
+	using const_iterator = list_node_iterator <false>;
 	static_assert(std::is_object_v<_Ty>, "The C++ Standard forbids container adaptors of non-object types "
 		"because of [container.requirements].");
 	static_assert(!std::is_reference_v<_Ty>, "no references allowed");
@@ -904,7 +758,7 @@ public:
 	template<typename _Pred1>
 	void unique(_Pred1 _Pred);
 	//
-	void show();
+	void show()const;
 	//
 	void remove(const _Ty& val);
 	//
@@ -999,42 +853,31 @@ public:
 
 	}
 	//
-	iterator begin()const noexcept {
+	const_iterator begin()const noexcept {
 
-		return start();
+		return head;
 	}
 	//
 	iterator begin()noexcept {
 
-		return start();
+		return head;
 	}
 	//
-	iterator end()const noexcept {
+	const_iterator end()const noexcept {
 
-		return finish();
+		return nullptr;
 	}
 	//
 	iterator end() noexcept {
-		return finish();
+		return nullptr;
 	}
 	//
 	const_iterator cbegin()const noexcept {
-
-		return cstart();
-	}
-	//
-	const_iterator cbegin()noexcept {
-
-		return cstart();
+		return head;
 	}
 	//
 	const_iterator cend()const noexcept {
-
-		return cfinish();
-	}
-	//
-	const_iterator cend() noexcept {
-		return cfinish();
+		return nullptr;
 	}
 	//unsafe_insert func done// 
 	//use this func only for performance and when you 
@@ -1078,7 +921,7 @@ public:
 		//undefined
 		static_assert(std::is_nothrow_destructible_v<_Ty>, "the type must be"
 			"destructible without throwing");
-		if (pos.ptr==nullptr ||pos.ptr->next==nullptr)return false;
+		if (pos.ptr == nullptr || pos.ptr->next == nullptr)return false;
 		count--;
 		list_node* ptr{ pos.ptr->next };
 		pos.ptr->next = ptr->next;
@@ -1211,7 +1054,7 @@ void single_linked_list<_Ty>::unique(_Pred1 _Pred) {
 }
 //show func done
 template<typename _Ty>
-void single_linked_list<_Ty>::show() {
+void single_linked_list<_Ty>::show()const {
 	//use this func if the elements can be printed
 	list_node* ptr{ head };
 	while (ptr != nullptr) {
