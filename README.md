@@ -188,5 +188,9 @@ also this data structure  accepts only elements that are nothrow destructible.
 
 27) erase_after ,this function takes an iterator pos and deletes the element after this position you gave,if the position is invalid or doesn't belong in the list that called the method an exception will be thrown not_a_valid_position exception
 
+# 📝NOTE THAT: 
+TO SEE HOW THE ITERATOR API WORKS AND THE LIST NODE API WORKS GO TO SEE THE IMPLEMENTATION FOR MORE DETAILS
 
-
+# 📬IF YOU HAVE ANY ISSEUES ON THIS PLZ FEEL FREE TO SUBMIT THEM 📬
+# 👥CONTRIBUTORS:
+# 🎨~Paltoudara
