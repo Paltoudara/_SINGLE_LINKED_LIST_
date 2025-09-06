@@ -932,13 +932,13 @@ public:
 		return true;
 	}
 };
-//default constructor done ,pretty much default state of the object 
+//default constructor done ,pretty much default state of the object// 
 template<typename _Ty>
 single_linked_list<_Ty>::single_linked_list()noexcept
 	:head{}, tail{}, count{}
 {
 }
-//initializer list constructor done
+//initializer list constructor done//
 template<typename _Ty>
 single_linked_list<_Ty>::single_linked_list(const std::initializer_list<_Ty>& other)
 	: head{}, tail{}, count{}
@@ -953,7 +953,7 @@ single_linked_list<_Ty>::single_linked_list(const std::initializer_list<_Ty>& ot
 		ptr++;
 	}
 }
-//copy constructor done 
+//copy constructor done// 
 template<typename _Ty>
 single_linked_list<_Ty>::single_linked_list(const single_linked_list<_Ty>& other)
 	:head{}, tail{}, count{}
@@ -971,7 +971,7 @@ single_linked_list<_Ty>::single_linked_list(const single_linked_list<_Ty>& other
 	}
 
 }
-//move constructor done 
+//move constructor done// 
 template<typename _Ty>
 single_linked_list<_Ty>::single_linked_list(single_linked_list<_Ty>&& other)noexcept
 	:head{}, tail{}, count{}
@@ -983,53 +983,53 @@ single_linked_list<_Ty>::single_linked_list(single_linked_list<_Ty>&& other)noex
 	std::swap(tail, other.tail);
 	std::swap(count, other.count);
 }
-//destructor done 
+//destructor done// 
 template<typename _Ty>
 single_linked_list<_Ty>::~single_linked_list()noexcept {
 	clear();
 }
-//push back done
+//push back done//
 template<typename _Ty>
 bool single_linked_list<_Ty>::push_back(const _Ty& data) {
 
 	return push_back_node(data);
 }
-//push back done
+//push back done//
 template<typename _Ty>
 bool single_linked_list<_Ty>::push_back(_Ty&& data) {
 	return push_back_node(std::move(data));
 }
-//push front done
+//push front done//
 template<typename _Ty>
 bool single_linked_list<_Ty>::push_front(_Ty&& data) {
 	return push_front_node(std::move(data));
 }
-//push front done
+//push front done//
 template<typename _Ty>
 bool single_linked_list<_Ty>::push_front(const _Ty& data) {
 	return push_front_node(data);
 }
-//pop front done 
+//pop front done//
 template<typename _Ty>
 void single_linked_list<_Ty>::pop_front() {
 	pop_front_node();
 }
-//pop back done
+//pop back done//
 template<typename _Ty>
 void single_linked_list<_Ty>::pop_back() {
 	pop_back_node();
 }
-//reverse a linked list done
+//reverse a linked list done//
 template<typename _Ty>
 void single_linked_list<_Ty>::reverse()noexcept {
 	reverse_linked_list();
 }
-//insert element done
+//insert element done//
 template<typename _Ty>
 bool single_linked_list<_Ty>::insert_after(const_iterator pos, const _Ty& data) {
 	return insert_element(pos, data);
 }
-//add unique done
+//add unique done//
 template<typename _Ty>
 bool single_linked_list<_Ty>::add_unique_after(const_iterator pos, const _Ty& data) {
 	return add_unique_node(pos, data, std::equal_to<>{});
@@ -1041,18 +1041,18 @@ bool single_linked_list<_Ty>::add_unique_after(const_iterator pos, const _Ty& da
 	_Pred1 _Pred) {
 	return add_unique_node(pos, data, _Pred);
 }
-//unique func done 
+//unique func done// 
 template<typename _Ty>
 void single_linked_list<_Ty>::unique() {
 	delete_duplicates(std::equal_to<>{});
 }
-//unique func done
+//unique func done//
 template<typename _Ty>
 template<typename _Pred1>
 void single_linked_list<_Ty>::unique(_Pred1 _Pred) {
 	delete_duplicates(_Pred);
 }
-//show func done
+//show func done//
 template<typename _Ty>
 void single_linked_list<_Ty>::show()const {
 	//use this func if the elements can be printed
@@ -1063,31 +1063,31 @@ void single_linked_list<_Ty>::show()const {
 	}
 	std::cout << '\n';
 }
-//remove func done
+//remove func done//
 template<typename _Ty>
 void single_linked_list<_Ty>::remove(const _Ty& data) {
 	erase_node_if([&](const _Ty& _Other) -> bool { return _Other == data; });
 }
-//remove_if func done
+//remove_if func done//
 template<typename _Ty>
 template<typename _Pred1>
 void single_linked_list<_Ty>::remove_if(_Pred1 _Pred) {
 	erase_node_if(_Pred);
 }
-//swap func done
+//swap func done//
 template<typename _Ty>
 void single_linked_list<_Ty>::swap(single_linked_list<_Ty>& other) noexcept {
 	std::swap(head, other.head);
 	std::swap(tail, other.tail);
 	std::swap(count, other.count);
 }
-//emplace_back func done 
+//emplace_back func done// 
 template<typename _Ty>
 template<class ..._Valty>
 bool single_linked_list<_Ty>::emplace_back(_Valty&&..._Val) {
 	return emplace_back_node(std::forward<_Valty>(_Val)...);
 }
-//emplace_front func done 
+//emplace_front func done// 
 template<typename _Ty>
 template<class ..._Valty>
 bool single_linked_list<_Ty>::emplace_front(_Valty&&..._Val) {
@@ -1154,7 +1154,7 @@ single_linked_list<_Ty>& single_linked_list<_Ty>::operator=(const single_linked_
 	}
 	return *this;
 }
-//move operator func done 
+//move operator func done// 
 template<typename _Ty>
 single_linked_list<_Ty>& single_linked_list<_Ty>::operator=(single_linked_list<_Ty>
 	&& other) & noexcept {
@@ -1166,7 +1166,7 @@ single_linked_list<_Ty>& single_linked_list<_Ty>::operator=(single_linked_list<_
 	std::swap(tail, other.tail);
 	return *this;
 }
-//copy with initializer list done 
+//copy with initializer list done// 
 template<typename _Ty>
 single_linked_list<_Ty>& single_linked_list<_Ty>::operator=(const std::initializer_list<_Ty>
 	& other)& {
@@ -1226,62 +1226,62 @@ single_linked_list<_Ty>& single_linked_list<_Ty>::operator=(const std::initializ
 
 	return *this;
 }
-//is_ascending func done 
+//is_ascending func done// 
 template<typename _Ty>
 bool single_linked_list<_Ty>::is_ascending()const {
 	return is_ascending_(std::less_equal<>{});
 }
-//is_ascending func done 
+//is_ascending func done// 
 template<typename _Ty>
 template<typename Compare>
 bool single_linked_list<_Ty>::is_ascending(Compare comp)const {
 	return is_ascending_(comp);
 }
-//is_descending func done 
+//is_descending func done// 
 template<typename _Ty>
 bool single_linked_list<_Ty>::is_descending()const {
 	return is_descending_(std::greater_equal<>{});
 }
-//is_descending func done 
+//is_descending func done// 
 template<typename _Ty>
 template<typename Compare>
 bool single_linked_list<_Ty>::is_descending(Compare comp)const {
 	return is_descending_(comp);
 }
-//is_sorted func done 
+//is_sorted func done// 
 template<typename _Ty>
 bool single_linked_list<_Ty>::is_sorted()const {
 	return is_sorted_(std::less_equal<>{}, std::greater_equal<>{});
 }
-//is_sorted func done 
+//is_sorted func done// 
 template<typename _Ty>
 template<typename Compare1, typename Compare2>
 bool single_linked_list<_Ty>::is_sorted(Compare1 comp1, Compare2 comp2)const {
 	return is_sorted_(comp1, comp2);
 }
-//merge func done 
+//merge func done// 
 template<typename _Ty>
 template<typename Compare>
 void single_linked_list<_Ty>::merge(single_linked_list<_Ty>& other, Compare comp) {
 	merge_lists(other, comp);
 }
-//merge func done 
+//merge func done// 
 template<typename _Ty>
 template<typename Compare>
 void single_linked_list<_Ty>::merge(single_linked_list<_Ty>&& other, Compare comp) {
 	merge_lists(other, comp);
 }
-//merge func done 
+//merge func done// 
 template<typename _Ty>
 void single_linked_list<_Ty>::merge(single_linked_list<_Ty>& other) {
 	merge_lists(other, std::less_equal<>{});
 }
-//merge func done
+//merge func done//
 template<typename _Ty>
 void single_linked_list<_Ty>::merge(single_linked_list<_Ty>&& other) {
 	merge_lists(other, std::less_equal<>{});
 }
-//
+//erase_after func done//
 template<typename _Ty>
 bool single_linked_list<_Ty>::erase_after(const_iterator pos) {
 	return erase(pos);
