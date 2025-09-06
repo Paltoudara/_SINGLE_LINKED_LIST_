@@ -158,4 +158,18 @@ also this data structure  accepts only elements that are nothrow destructible.
 
 12) add_unique_after has exactly the same behavior as the insert_after function ,the only thing that is different is that if the element is already at the list and we can see this with the help of a comparator passed to this function ,then nothing happens to the list (see implementation for more details of how this works)
 
-13) unique this function simply removes the duplicates in the list if they exist using again a comparator passed to the function ,WARNING: this function considers that the list is sorted and removes the duplicates this way, otherwise we would need another way to tell if there were duplicates in the list in order to remove them (see implementation for more details of how this works)
+13) unique this function simply removes the duplicates in the list if they exist using again a comparator passed to the function ,WARNING: this function considers that the list is sorted and removes the duplicates this way, otherwise we would need another way to tell if there were duplicates in the list in order to remove them (see implementation for more details of how this works) and also if the comp arg throws then the list might delete some elements or not 
+
+14) show,this function just prints all the list elements,use this func only if the values that the container holds can be printed
+
+15) remove,this function simply removes the values of the list that compare equal to the value passed as argument,if something goes wrong  this function might again delete some of the elements in the list that compare equal to the value passed or none of them (see implementation for more details of how this works)
+
+16) remove_if, this function works pretty similar with the remove function but this time we remove elements based on a condition passed by the user (see implementation for more details of how this works)
+
+17) swap,this function simply swaps the contents of two linked lists
+
+18) emplace_back works the same as the push_back function but this time we craft the element in place with the arguments passed and we create the list node
+
+19) emplace_front works the same as the push_front function but this time we craft the element in place with the arguments passed and we create the list node
+
+20) copy operator
