@@ -131,7 +131,7 @@ public:
 
 ```
 # 📝NOTE THAT: 
-THIS IS THE INTERFACE OF THE SINGLE_LINKED_LIST WITH THIS INTERFACE YOU CAN MANIPULATE THE LIST. IF YOU WANT MORE DETAILS ABOUT THE IMPLEMENTATION JUST SEE THE header.h and Macros.h for how things are done
+THIS IS THE INTERFACE OF THE SINGLE_LINKED_LIST WITH THIS INTERFACE YOU CAN MANIPULATE THE LIST. IF YOU WANT MORE DETAILS ABOUT THE IMPLEMENTATION JUST SEE THE List.h and Macros.h for how things are done
 also this data structure  accepts only elements that are nothrow destructible.
 # ⚙️Member functions
 1) default constructor: this function just creates a list in the default state
