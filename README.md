@@ -172,4 +172,21 @@ also this data structure  accepts only elements that are nothrow destructible.
 
 19) emplace_front works the same as the push_front function but this time we craft the element in place with the arguments passed and we create the list node
 
-20) copy operator
+20) copy operator the copy operator just copies the contents of the other to us we make a deep copy ,if something goes wrong the list might change in some way ,or may return to the default state (see implementation for more details of how this works) ,in the while if a copie goes wrong the list is left with some values or none changed if something goes wrong in the if with the push_back we delete what we managed to allocate and return to default state because copy all or copy none
+
+21) move operator ,deallocs our contents and steals the other's contents, WARNING: moving into ourselves will put the list in the default state so will lose our resources
+
+22) copy operator with initializer list as argument works exactly the same way as the original copy operator
+
+23) is_ascending checks if the list is in ascending order using a comparator passed as argument ,if something goes wrong this function doesn't do anything (strong exception guarantee) (see implementation for more details of how this works)
+
+24) is_descending same case but this time if the list is in descending order (strong exception guarantee) (see implementation for more details of how this works)
+
+25) is_sorted does tells if the list is sorted in  ascending order or descending order using a comparator passed as argument  (strong exception guarantee) (see implementation for more details of how this works)
+
+26) merge ,this function merges two lists if they are both in ascending order and the other argument is not empty ,also we can't merge into ourselves ,if something goes wrong the behavior is complicated (see implementation for more details of how this works) and read it very carefully ,WARNING:the comparator used to merge the list in order to compare elements must not throw otherwise the lists will become ill formed
+
+27) erase_after ,this function takes an iterator pos and deletes the element after this position you gave,if the position is invalid or doesn't belong in the list that called the method an exception will be thrown not_a_valid_position exception
+
+
+
