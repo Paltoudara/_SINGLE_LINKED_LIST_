@@ -156,6 +156,6 @@ also this data structure  accepts only elements that are nothrow destructible.
 
 11) insert_after,this function takes an argument pos and a copy of value to insert it ,if the pos points to nothing then nothing happens ,if the position is invalid or doesn't belong in the list that called the method an exception will be thrown not_a_valid_position exception
 
-12) add_unique_after has exactly the same behavior as the insert_after function ,the only thing that is different is that if the element is already at the list and we can see this with the help of a comparator passed to this function ,then nothing happens to the list (see implementation for more details of how this works
+12) add_unique_after has exactly the same behavior as the insert_after function ,the only thing that is different is that if the element is already at the list and we can see this with the help of a comparator passed to this function ,then nothing happens to the list (see implementation for more details of how this works)
 
-13) unique this function simply removes the duplicates in the list if they exist using again a comparator passed to the function ,WARNING: this function considers that the list is sorted and removes the duplicates this way, otherwise we would need another way to tell if there were duplicates in the list in order to remove them
+13) unique this function simply removes the duplicates in the list if they exist using again a comparator passed to the function ,WARNING: this function considers that the list is sorted and removes the duplicates this way, otherwise we would need another way to tell if there were duplicates in the list in order to remove them (see implementation for more details of how this works)
