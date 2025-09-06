@@ -563,17 +563,22 @@ private:
 		list_node* curr2{ other.head };
 		//the comparator should not throw otherwise 
 		//this function will leave the lists in ill form
-		while (curr1 != nullptr && curr2 != nullptr) {
-			if (comp(std::as_const(curr1->data), std::as_const(curr2->data))) {
-				ptr->next = curr1;
-				ptr = ptr->next;
-				curr1 = curr1->next;
+		try {
+			while (curr1 != nullptr && curr2 != nullptr) {
+				if (comp(std::as_const(curr1->data), std::as_const(curr2->data))) {
+					ptr->next = curr1;
+					ptr = ptr->next;
+					curr1 = curr1->next;
+				}
+				else {
+					ptr->next = curr2;
+					ptr = ptr->next;
+					curr2 = curr2->next;
+				}
 			}
-			else {
-				ptr->next = curr2;
-				ptr = ptr->next;
-				curr2 = curr2->next;
-			}
+		}
+		catch (...) {
+			delete ptr;//no memory leak
 		}
 		//whatever left we just give it because we now have only onel list
 		if (curr1 == nullptr && curr2 != nullptr) {
@@ -1139,12 +1144,17 @@ single_linked_list<_Ty>& single_linked_list<_Ty>::operator=(const single_linked_
 			curr2 = curr2->next;
 		}
 		if (prev1 == nullptr && curr2 != nullptr || curr2 != nullptr && curr1 == nullptr) {
-			while (curr2 != nullptr) {
-				if (!push_back(curr2->data)) {
-					clear();
-					break;
+			try {
+				while (curr2 != nullptr) {
+					if (!push_back(curr2->data)) {
+						clear();
+						break;
+					}
+					curr2 = curr2->next;
 				}
-				curr2 = curr2->next;
+			}//clear everything that we might have pushed so far
+			catch (...) {
+				clear();
 			}
 			return *this;
 		}
@@ -1210,13 +1220,18 @@ single_linked_list<_Ty>& single_linked_list<_Ty>::operator=(const std::initializ
 		curr1 = curr1->next;
 		curr2++;
 	}
-	if (prev1 == nullptr && other.size() != 0 || curr1 == nullptr && curr2 != other.end()) {
-		while (curr2 != other.end()) {
-			if (!push_back(*curr2)) {
-				clear();
-				break;
+	if (prev1 == nullptr &&curr2 != other.end() || curr1 == nullptr && curr2 != other.end()) {
+		try {
+			while (curr2 != other.end()) {
+				if (!push_back(*curr2)) {
+					clear();
+					break;
+				}
+				curr2++;
 			}
-			curr2++;
+		}//clear everything that we might have pushed so far
+		catch (...) {
+			clear();
 		}
 		return *this;
 	}
