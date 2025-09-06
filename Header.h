@@ -122,7 +122,7 @@ private:
 			throw tried_to_access_an_empty_iterator_{ "tried to access an empty iterator" };
 		}
 		//
-		template<typename =std::enable_if_t<value>>
+		template<typename = std::enable_if_t<value>>
 		_Ty& operator *()& {
 			if (ptr != nullptr) {
 				return ptr->data;
@@ -137,7 +137,7 @@ private:
 			throw tried_to_access_an_empty_iterator_{ "tried to access an empty iterator" };
 		}
 		//
-		template<typename =std::enable_if_t<value>>
+		template<typename = std::enable_if_t<value>>
 		_Ty&& operator *()&& {
 			if (ptr != nullptr) {
 				return std::move(ptr->data);
@@ -159,7 +159,7 @@ private:
 			throw tried_to_access_an_empty_iterator_{ "tried to access an empty iterator" };
 		}
 		//
-		template<typename=std::enable_if_t<value>>
+		template<typename = std::enable_if_t<value>>
 		_Ty* operator ->()& {
 			if (ptr != nullptr) {
 				return std::addressof(ptr->data);
@@ -944,7 +944,7 @@ single_linked_list<_Ty>::single_linked_list(const std::initializer_list<_Ty>& ot
 	: head{}, tail{}, count{}
 {//if the push_backs fails give back everything allocated and return 
 	//the object in default state 
-	try{
+	try {
 		const _Ty* ptr{ other.begin() };
 		for (std::size_t i = 0; i < other.size(); i++) {
 			if (!push_back(*ptr)) {
@@ -953,8 +953,9 @@ single_linked_list<_Ty>::single_linked_list(const std::initializer_list<_Ty>& ot
 			}
 			ptr++;
 		}
-	}
-	catch(...){
+	}//if push_back throws we deallocate everything that we might have
+	//pushed
+	catch (...) {
 		clear();
 	}
 }
@@ -966,13 +967,19 @@ single_linked_list<_Ty>::single_linked_list(const single_linked_list<_Ty>& other
 	//if this==&other nothing happens
 	//if this!=&other then i other empty nothing happens
 	//otherwise copy the contents of the other object
-	list_node* curr{ other.head };
-	while (curr != nullptr) {
-		if (!push_back(curr->data)) {
-			clear();
-			break;
+	try {
+		list_node* curr{ other.head };
+		while (curr != nullptr) {
+			if (!push_back(curr->data)) {
+				clear();
+				break;
+			}
+			curr = curr->next;
 		}
-		curr = curr->next;
+	}//if push_back throws we deallocate everything that we might have
+	//pushed
+	catch (...) {
+		clear();
 	}
 
 }
