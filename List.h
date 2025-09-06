@@ -304,6 +304,7 @@ private:
 		list_node* ptr{};
 		while (head != nullptr) {
 			ptr = head;
+			std::cout << ptr->data << '\n';
 			head = head->next;
 			delete ptr;
 		}
