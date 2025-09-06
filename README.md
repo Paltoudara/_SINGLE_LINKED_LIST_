@@ -3,110 +3,128 @@
 ```markdown
 ```cpp
 template<typename _Ty>
-class vector final {
+class single_linked_list final {
 public:
-	using iterator = vector_iterator<true>;
-	using const_iterator = vector_iterator<false>;
+	using iterator = list_node_iterator<true>;
+	using const_iterator = list_node_iterator <false>;
 
-	vector()noexcept;
+	single_linked_list()noexcept;
 
-	vector(const std::size_t capacity);
+	single_linked_list(const std::initializer_list<_Ty>& other);
 
-	vector(const vector<_Ty>& other);
+	~single_linked_list()noexcept;
 
-	vector(const std::initializer_list<_Ty>& other);
+	single_linked_list(const single_linked_list<_Ty>& other);
 
-	vector(vector<_Ty>&& other)noexcept;
+	single_linked_list(single_linked_list<_Ty>&& other)noexcept;
 
-	std::size_t capacity()const noexcept;
+	single_linked_list<_Ty>& operator =(const single_linked_list<_Ty>& other)&;
+
+	single_linked_list<_Ty>& operator =(single_linked_list<_Ty>&& other) & noexcept;
+
+	single_linked_list<_Ty>& operator=(const std::initializer_list<_Ty>& other)&;
+
+	bool is_ascending()const;
+
+	template<typename Compare>
+	bool is_ascending(Compare comp)const;
+
+	bool is_descending()const;
+
+	template<typename Compare>
+	bool is_descending(Compare comp)const;
+
+	bool is_sorted()const;
+
+	template<typename Compare1, typename Compare2 >
+	bool is_sorted(Compare1 comp1, Compare2 comp2)const;
+	
+	bool push_back(const _Ty& data);
+
+	bool push_back(_Ty&& data);
+
+	template<class ..._Valty>
+	bool emplace_back(_Valty&&..._Val);
+
+	template<class ..._Valty>
+	bool emplace_front(_Valty&&..._Val);
+
+	bool push_front(const _Ty& data);
+
+	bool push_front(_Ty&& data);
+
+	void pop_front();
+
+	void pop_back();
+
+	void reverse()noexcept;
+
+	bool insert_after(const_iterator pos, const _Ty& data);
+
+	bool add_unique_after(const_iterator pos, const _Ty& data);
+
+	template<typename _Pred1>
+	bool add_unique_after(const_iterator pos, const _Ty& data, _Pred1 _Pred);
+
+	void unique();
+
+	template<typename _Pred1>
+	void unique(_Pred1 _Pred);
+
+	void show()const;
+
+	void remove(const _Ty& val);
+
+	template<typename _Pred1>
+	void remove_if(_Pred1 _Pred);
+
+	void merge(single_linked_list<_Ty>& other);
+
+	void merge(single_linked_list<_Ty>&& other);
+
+	template<typename Compare>
+	void merge(single_linked_list<_Ty>& other, Compare comp);
+
+	template<typename Compare>
+	void merge(single_linked_list<_Ty>&& other, Compare comp);
+
+	bool erase_after(const_iterator pos);
 
 	bool empty()const noexcept;
 
-	std::size_t size()const noexcept;
+	std::size_t size()const noexcept ;
 
-	void push_back(const _Ty& data);
+	void swap(single_linked_list<_Ty>& other)noexcept;
 
-	void push_back(_Ty&& data);
+	_NODISCARD _Ty&& back()&& ;
 
-	template<class ..._Valty>
-	void emplace_back(_Valty&&..._Val);
 
-	void pop_back()noexcept;
+	_NODISCARD const _Ty&& back()const&& ;
 
-	void show() const;
+	_NODISCARD const _Ty& back()const& ;
+	_NODISCARD _Ty& back()& ;
 
-	const _Ty& operator [](const std::size_t index) const&;
+	_NODISCARD const _Ty& front()const&;
 
-	_Ty& operator [](const std::size_t index)&;
+	_NODISCARD _Ty& front()& ;
 
-	_Ty&& operator [](const std::size_t index)&&;
+	_NODISCARD _Ty&& front()&&;
 
-	const _Ty&& operator [](const std::size_t index)const&&;
+	_NODISCARD const _Ty&& front()const&& ;
 
-	const _Ty& at(const std::size_t index) const&;
-
-	_Ty&at(const std::size_t index)&;
-	
-	_Ty&& at(const std::size_t index)&&;
-
-	const _Ty&& at(const std::size_t index)const&&;
-
-	~vector()noexcept;
-
-	void clear()noexcept;
-
-	const _Ty& front() const&;
-
-	_Ty& front()&;
-
-	_Ty&& front()&&;
-
-	const _Ty&& front()const&&;
-
-	const _Ty& back() const&;
-
-	_Ty& back()&;
-
-	_Ty&& back()&&;
-
-	const _Ty&& back()const&&;
-
-	void swap(vector<_Ty>& other)noexcept;
-
-	void reserve(const std::size_t new_capacity);
-
-	void shrink_to_fit();
-
-	void resize(const std::size_t new_size);
-
-	void resize(const std::size_t new_size, const _Ty& value);
-
-	vector<_Ty>& operator =(const vector<_Ty>& other)&;
-
-	void assign(const std::size_t count, const _Ty& value);
-
-	vector<_Ty>& operator =(vector<_Ty>&& other) & noexcept;
-
-	vector<_Ty>& operator =(const std::initializer_list<_Ty>& other)&;
-
-	_Ty** data()noexcept;
-
-	void insert(const std::size_t index, const _Ty& value);
-
-	void insert(const std::size_t index, _Ty&& value);
-
-	template<class..._Valty>
-	void emplace(const std::size_t index, _Valty&&..._Val);
-
-	void erase(const std::size_t index)noexcept;
+	const_iterator begin()const noexcept ;
 
 	iterator begin()noexcept;
 
-	iterator end()noexcept;
+	const_iterator end()const noexcept ;
 
-	const_iterator cbegin()noexcept;
+	iterator end() noexcept ;
+	const_iterator cbegin()const noexcept ;
 
-	const_iterator cend()noexcept;
+	const_iterator cend()const noexcept ;
+
+	bool unsafe_insert(const_iterator pos, const _Ty& data);
+	bool unsafe_erase(const_iterator pos)noexcept;
 
 };
 
