@@ -130,6 +130,10 @@ public:
 
 
 ```
+# 📝NOTE THAT: 
+THIS IS THE INTERFACE OF THE SINGLE_LINKED_LIST WITH THIS INTERFACE YOU CAN MANIPULATE THE LIST. IF YOU WANT MORE DETAILS ABOUT THE IMPLEMENTATION JUST SEE THE header.h and Macros.h for how things are done
+also this data structure  accepts only elements that are nothrow destructible.
+
 AN entire single_linked_list with all the basic features:
 <br>
 1. an  inside class of the simple list node with constructors<br>
