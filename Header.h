@@ -944,13 +944,18 @@ single_linked_list<_Ty>::single_linked_list(const std::initializer_list<_Ty>& ot
 	: head{}, tail{}, count{}
 {//if the push_backs fails give back everything allocated and return 
 	//the object in default state 
-	const _Ty* ptr{ other.begin() };
-	for (std::size_t i = 0; i < other.size(); i++) {
-		if (!push_back(*ptr)) {
-			clear();
-			break;
+	try{
+		const _Ty* ptr{ other.begin() };
+		for (std::size_t i = 0; i < other.size(); i++) {
+			if (!push_back(*ptr)) {
+				clear();
+				break;
+			}
+			ptr++;
 		}
-		ptr++;
+	}
+	catch(...){
+		clear();
 	}
 }
 //copy constructor done// 
