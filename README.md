@@ -124,6 +124,7 @@ public:
 	const_iterator cend()const noexcept ;
 
 	bool unsafe_insert(const_iterator pos, const _Ty& data);
+
 	bool unsafe_erase(const_iterator pos)noexcept;
 
 };
@@ -187,6 +188,10 @@ also this data structure  accepts only elements that are nothrow destructible.
 26) merge ,this function merges two lists if they are both in ascending order and the other argument is not empty ,also we can't merge into ourselves ,if something goes wrong the behavior is complicated (see implementation for more details of how this works) and read it very carefully ,WARNING:the comparator used to merge the list in order to compare elements must not throw otherwise the lists will become ill formed
 
 27) erase_after ,this function takes an iterator pos and deletes the element after this position you gave,if the position is invalid or doesn't belong in the list that called the method an exception will be thrown not_a_valid_position exception
+
+28) unsafe_insert,this function does the same thing as the insert_after function but the only difference is that it doesn' check (for performance reasons) if the iterator passed is invalid or doesn't point to the list that called the method,use this func if you know exactly that the iterator you passed is valid and it shows in the list that called the method be very careful ,otherwise the behavior is undefined
+
+29) unsafe_erase is the same case as erase after and has the same concept idea as unsafe_insert,use this func with care because it doesn't make checks (this is for performance purpose)
 
 # 📝NOTE THAT: 
 TO SEE HOW THE ITERATOR API WORKS AND THE LIST NODE API GO TO SEE THE IMPLEMENTATION FOR MORE DETAILS
