@@ -175,7 +175,7 @@ also this data structure accepts only elements that are nothrow destructible.
 
 20) copy operator the copy operator just copies the contents of the other to us ,we make a deep copy ,if something goes wrong the list might change in some way ,or may return to the default state (see implementation for more details of how this works) ,in the while if a copy goes wrong the list is left with some values or none changed if something goes wrong in the if with the push_back we delete what we managed to allocate and return to default state because copy all or copy none
 
-21) move operator ,deallocs our contents and steals the other's contents, WARNING: moving into ourselves will put the list in the default state so will lose our resources
+21) move operator ,deallocs our contents and steals the other's contents, WARNING: moving into ourselves will put the list in the default state so we will lose our resources
 
 22) copy operator with initializer list as argument works exactly the same way as the original copy operator
 
