@@ -18,6 +18,8 @@ class single_linked_list final {
 private:
 	class list_node final {//list node class done 
 	private:
+		//this constructor is only used for the  emplace_back,emplace_front
+		//funcs in order to construct data in place
 		class secretClass {};
 		template<class ..._Valty>
 		list_node(secretClass, _Valty&& ..._Val) :data{ std::forward<_Valty>(_Val)... }, next{ nullptr }
@@ -27,10 +29,10 @@ private:
 				"the type must be constructible in place with these args");
 		}
 	public:
+		//
 		_Ty data;
 		list_node* next;
-		//template<typename t=_Ty>
-		//requires(std::is_default_constructible_v<_Ty>)
+		//
 		list_node()noexcept(std::is_nothrow_default_constructible_v<_Ty>)
 			:data{}, next{}
 		{
@@ -572,7 +574,7 @@ private:
 		list_node* curr1{ head };
 		list_node* curr2{ other.head };
 		//the comparator should not throw otherwise 
-		//this function will leave the lists in ill form
+		//the behavior is undefined
 		try {
 			while (curr1 != nullptr && curr2 != nullptr) {
 				if (comp(std::as_const(curr1->data), std::as_const(curr2->data))) {
