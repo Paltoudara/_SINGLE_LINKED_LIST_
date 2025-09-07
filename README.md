@@ -193,6 +193,16 @@ also this data structure accepts only elements that are nothrow destructible.
 
 29) unsafe_erase is the same case as erase_after and has the same concept idea as unsafe_insert,use this func with care because it doesn't make checks (this is for performance purposes)
 
+30) empty ,tells if the list is empty
+
+31) size,tells the number of elements that the list currently holds
+
+32) front ,gives the first element of the list
+
+33) back,gives the last element of the list
+
+34) begin,end is for the iterator API (see implementation for more details of how this works) but begin is the start of the list,and end is the end of the list
+
 # 📝NOTE THAT: 
 TO SEE HOW THE ITERATOR API WORKS AND THE LIST NODE API GO TO SEE THE IMPLEMENTATION FOR MORE DETAILS
 
