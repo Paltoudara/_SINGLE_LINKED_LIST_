@@ -137,7 +137,7 @@ also this data structure accepts only elements that are nothrow destructible.
 # ⚙️Member functions
 1) default constructor this function just creates a list in the default state
 
-2) constructor with initializer list, if the function fails then the list is left in the default state (strong exception guarantee) else we just copie the elements of the initializer list (deep copy)
+2) constructor with initializer list, if the function fails then the list is left in the default state (strong exception guarantee) else we just copy the elements of the initializer list (deep copy)
 
 3) copy constructor is exactly the same as the previous constructor this time the other is a single_linked_list argument, if the function fails then the list is left in the default state (strong exception guarantee)
 
