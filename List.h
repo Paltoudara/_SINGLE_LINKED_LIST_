@@ -10,6 +10,9 @@
 #include<memory>
 #include"Macros.h"
 _PANAGIOTIS_BEGIN
+//-----------------------
+//		INTERFACE BEGIN
+//-----------------------
 template<typename _Ty>
 class single_linked_list final {
 private:
@@ -55,7 +58,7 @@ private:
 		}
 
 	};
-	// This is a custom iterator class.
+	// This is a template custom iterator class.
 	// It acts as a lightweight wrapper around a raw pointer to a list node.
 	// 
 	// Supported operations:
@@ -73,10 +76,14 @@ private:
 	// is not used in that state. Use the iterator only when you are certain 
 	// it points to a valid node or is `nullptr`. 
 	// ,pretty much all that matters is where the pointer
-	//shows and remember this iterator is only to get the element and change it also
-	//Also one last thing, when the iterator is nullptr all the operations 
-	// supported will not work if you call them for this iterator
-	//because its nullptr now assign it to point to a valid node
+	//shows.Also when the iterator is nullptr all the operations 
+	//supported will not work if you call them for this iterator
+	//because its nullptr show assign it to point to a valid node
+	//one last thing this iterator class is a template class that handles
+	//both the const and the non const iterator when we use iterator all
+	//the member funcs and overloads are available 
+	//if we use the const_iterator some of them are blocked in order to 
+	//not to change the element that the iterator points
 	template<bool value>
 	class list_node_iterator final {
 	private:
@@ -221,6 +228,7 @@ private:
 	{//push back node it simply creates a new node and
 		//pushes it to the end of the list 
 		//it also uses perfect forwarding
+		//if the new fails this func does nothing
 		list_node* ptr{ new (std::nothrow)list_node{std::forward<_Valty>(_Val)} };
 		if (ptr != nullptr) {
 			if (head == nullptr) {
@@ -240,8 +248,8 @@ private:
 	template<typename _Valty>
 	bool push_front_node(_Valty&& _Val)
 	{//it simply creates a new node and pushes it to the start of the list
-		//if list is empty head=tail=ptr; count++;
-		//else tail->next=ptr tail=ptr; count++;
+		//it also uses perfect forwarding	
+		//if new operator fails this func does nothing
 		list_node* ptr{ new (std::nothrow)list_node{std::forward<_Valty>(_Val)} };
 		if (ptr != nullptr) {
 			ptr->next = head;
@@ -273,7 +281,7 @@ private:
 	}
 	//pop_back_node done// 
 	void pop_back_node()
-	{//if the list is empty throws
+	{//if the list is empty throws (count==0)
 		//if we have one node delete tail; head=tail=nullptr;l count --;
 		//if we have more than one we have to put tail to point 
 		//into the new last node using a for loop 
@@ -304,17 +312,17 @@ private:
 		list_node* ptr{};
 		while (head != nullptr) {
 			ptr = head;
-			std::cout << ptr->data << '\n';
 			head = head->next;
 			delete ptr;
 		}
+		//reset everything
 		tail = nullptr;
 		count = 0;
 	}
 	//reverse_list_node done//
 	void reverse_linked_list()noexcept
 	{//if we have one node return 
-		//if we have more than we are goint to reverse the listt
+		//if we have more than one we are goint to reverse the list
 		//simply we have two pointers start at the head of the list and at the head->next
 		//of the list 
 		//simply we pretty much put the next nodes where the head was
@@ -346,8 +354,9 @@ private:
 		//there are three scenarios
 		//pos==cend() or point to an empty list
 		//so don't do anything
-		// 1)pos points to a node of other list or a deallocated node so the func throws
-		//2)pos points to our list in that case we insert the element successfuly
+		//1)if pos is invalid we throw exception
+		//2)if pos point to our list to a valid node then we insert the
+		//element succesfully
 		if (pos == cend())return false;
 		list_node* curr{ head };
 		bool is_valid = false;
@@ -388,6 +397,7 @@ private:
 		// that is used in order to compare
 		//this _Pred must be a func that can be called with two const _Ty& args 
 		//and the return type must be bool else the behavior is undefined
+		//the _Pred arg should not throw
 		if (pos == cend())return false;
 		list_node* curr{ head };
 		bool  is_valid = false;
@@ -427,20 +437,20 @@ private:
 	template<typename _Pred1>
 	void delete_duplicates(_Pred1 _Pred) {
 		//this func simply does two things
-		//it is called by two funcs one that uses the std::equal_to<>() in order
+		//it is called by two funcs one that uses the std::equal_to<>{} in order
 		//to compare elements with the operator ==
 		//and the other uses a pred to compare the elements if they are equal 
 		//the _Pred func should be able to be called with two const _Ty& args
 		//and the return type of this func should be bool or else the behavior is
-		//undefined
+		//undefined,also this func should not throw
 		static_assert(std::is_nothrow_destructible_v<_Ty>, "the type must be destructible without throwing");
 		if (count < 2)return;//no duplicates 
 		//we pretty much have to pointers prev,curr
 		//prev show at head and curr to head ->next
 		//and we compare those pointers until curr ==nullptr 
 		//whenever we encouter two equals based on pred we delete them and progress only 
-		//curr else we progress curr and prev this func only works good if the results 
-		//are sorted in ascending order 
+		//curr else we progress curr and prev, this func only works good if the results 
+		//are sorted in ascending order
 		list_node* prev{ head };
 		list_node* curr{ head->next };
 		while (curr != nullptr) {
@@ -472,7 +482,7 @@ private:
 		static_assert(std::is_nothrow_destructible_v<_Ty>, "the type must be destructible without throwing");
 		//the _Pred func should be able to be called with one const _Ty& arg
 		//and the return type of this func should be bool or else the behavior is
-		//undefined
+		//undefined,also this func should not throw
 		//if you keep finding the element at the start delete it 
 		while (head != nullptr && _Pred(std::as_const(head->data))) {
 			pop_front();
@@ -504,8 +514,8 @@ private:
 	//emplace_back_node done// 
 	template<class ..._Valty>
 	bool emplace_back_node(_Valty&&..._Val) {
-		//emplace_back_node pretty much is the same with push
-		//the only difference is that we construct the data hold by list_node in place
+		//emplace_back_node pretty much is the same with push_back
+		//the only difference is that we construct the data hold by the list_node in place
 		list_node* ptr = list_node::craft(std::forward<_Valty>(_Val)...);
 		if (ptr != nullptr) {
 			if (head == nullptr) {
@@ -523,8 +533,8 @@ private:
 	//emplace_front_node done// 
 	template<class..._Valty>
 	bool emplace_front_node(_Valty&&..._Val) {
-		//emplace_front_node pretty much is the same with push
-		//the only difference is that we construct the data hold by list_node in place
+		//emplace_front_node pretty much is the same with push_front
+		//the only difference is that we construct the data hold by the list_node in place
 		list_node* ptr = list_node::craft(std::forward<_Valty>(_Val)...);
 		if (ptr != nullptr) {
 			ptr->next = head;
@@ -600,10 +610,11 @@ private:
 	bool is_ascending_(Compare comp)const {
 		//this is a func that takes a comparator in order to compare the elements
 		//and determine if they are sorted in ascending order
-		//we use the method curr,prev in order to compare its element
+		//we use the method curr,prev in order to compare the elements
 		//the default value of the comparator is std::less_equal<>{}
 		//the comp func should be a func that can be called by two args const _Ty&
 		//and const _Ty& and the return type should be bool else the behavior is undefined
+		//the comparator should not throw
 		if (count < 2)return true;
 		list_node* prev{ head };
 		list_node* curr{ head->next };
@@ -620,10 +631,11 @@ private:
 	bool is_descending_(Compare comp) const {
 		//this is a func that takes a comparator in order to compare the elements
 		//and determine if they are sorted in descending order
-		//we use the method curr,prev in order to compare its element
+		//we use the method curr,prev in order to compare the elements
 		//the default value of the comparator is std::greater_equal<>{}
 		//the comp func should be a func that can be called by two args const _Ty&
 		//and const _Ty& and the return type should be bool else the behavior is undefined
+		//the comp should also not throw
 		if (count < 2)return true;
 		list_node* prev{ head };
 		list_node* curr{ head->next };
@@ -640,11 +652,12 @@ private:
 	bool is_sorted_(Compare1 comp1, Compare2 comp2)const {
 		//this is a func that takes two comparators in order to compare the elements
 		//and determine if they are sorted in descending  and ascending order
-		//we use the method curr,prev in order to compare its element
+		//we use the method curr,prev in order to compare the elements
 		//the default values of the comparators is std::less_equal<>{} and 
 		// std::greater_equal<>{}
 		//the comp funcs should be funcs that can be called by two args const _Ty&
 		//and const _Ty& and the return type should be bool else the behavior is undefined
+		//the comparator funcs should also not throw
 		if (count < 2)return true;
 		list_node* prev{ head };
 		list_node* curr{ head->next };
@@ -662,7 +675,7 @@ private:
 	//erase func done//
 	bool erase(list_node_iterator<false> pos) {
 		//this is an erase function that deletes the element after the pos you gave
-		//we check if the iterator is nullptr or it points to a node
+		//we check if the iterator is nullptr or if it points to a node
 		//note that the iterator must point to the list that called the method and 
 		//must point to a valid node of that list
 		//we check this with the while, if is_valid=false; then we throw exception
@@ -794,7 +807,7 @@ public:
 	}
 	//
 	void swap(single_linked_list<_Ty>& other)noexcept;
-	//back func of the list returns the last element using reference qualifiers 
+	//back func of the list returns the last element  using reference qualifiers 
 	_NODISCARD _Ty&& back()&& {
 		if (count == 0) {
 			throw tried_to_access_an_empty_list_{ "tried to access  an empty list" };
@@ -858,30 +871,28 @@ public:
 		return std::move(head->data);
 
 	}
-	//
+	//returns the begining of the list
 	const_iterator begin()const noexcept {
-
 		return head;
 	}
-	//
+	//returns the begining of the list
 	iterator begin()noexcept {
-
 		return head;
 	}
-	//
+	//returns the end of the list
 	const_iterator end()const noexcept {
 
 		return nullptr;
 	}
-	//
+	//returns the end of the list
 	iterator end() noexcept {
 		return nullptr;
 	}
-	//
+	//returns the begining of the list
 	const_iterator cbegin()const noexcept {
 		return head;
 	}
-	//
+	//returns the end of the list
 	const_iterator cend()const noexcept {
 		return nullptr;
 	}
@@ -890,9 +901,9 @@ public:
 	//know where the iterator points be very careful
 	bool unsafe_insert(const_iterator pos, const _Ty& data) {
 		//this is again an insert function which works pretty similar to 
-		//to the insert after func but this func doesn't see if the pos you passed
+		//to the insert_after func but this func doesn't see if the pos you passed
 		//is valid so only use this func if you know that the iterator that you passed 
-		// points to the list that called the method and also points to an element of this list
+		// points to the list that called the method and also points to a valid element of this list
 		// not to nothing 
 		//make sure pretty much that the iterator is valid or else the behavior is
 		//undefined
@@ -921,8 +932,8 @@ public:
 		//this function works pretty similar to the erase_after function 
 		//the only difference is that this func doesn't see if the pos you passed
 		//is valid so only use this func if you know that the iterator that you passed 
-		// points to the list that called the method and also points to an element of this list
-		// not to nothing 
+		//points to the list that called the method and also points to a valid element of this list
+		//not to nothing 
 		//make sure pretty much that the iterator is valid or else the behavior is
 		//undefined
 		static_assert(std::is_nothrow_destructible_v<_Ty>, "the type must be"
@@ -938,7 +949,17 @@ public:
 		return true;
 	}
 };
-//default constructor done ,pretty much default state of the object// 
+//-----------------------
+//		INTERFACE END
+//-----------------------
+
+
+
+//-----------------------
+//		IMPLEMENTATION BEGIN
+//-----------------------
+
+//default constructor done ,pretty much default state of the list// 
 template<typename _Ty>
 single_linked_list<_Ty>::single_linked_list()noexcept
 	:head{}, tail{}, count{}
@@ -971,8 +992,9 @@ single_linked_list<_Ty>::single_linked_list(const single_linked_list<_Ty>& other
 	:head{}, tail{}, count{}
 {//this simply copies the contets of the other object
 	//if this==&other nothing happens
-	//if this!=&other then i other empty nothing happens
+	//if this!=&other then if other empty nothing happens
 	//otherwise copy the contents of the other object
+	//if the push_backs fails give back everything allocated and return 
 	try {
 		list_node* curr{ other.head };
 		while (curr != nullptr) {
@@ -996,7 +1018,8 @@ single_linked_list<_Ty>::single_linked_list(single_linked_list<_Ty>&& other)noex
 {//if this==&other then swaps nullptr's and 0's no problem 
 	//if this !=&other if other is empty same as case as previous
 	//if this!=&other and other not empty simply steal his contets
-	//and giving him the default state 
+	//and giving him the default state
+	//after that operation the other is in the default state
 	std::swap(head, other.head);
 	std::swap(tail, other.tail);
 	std::swap(count, other.count);
@@ -1047,12 +1070,12 @@ template<typename _Ty>
 bool single_linked_list<_Ty>::insert_after(const_iterator pos, const _Ty& data) {
 	return insert_element(pos, data);
 }
-//add unique done//
+//add_unique_after done//
 template<typename _Ty>
 bool single_linked_list<_Ty>::add_unique_after(const_iterator pos, const _Ty& data) {
 	return add_unique_node(pos, data, std::equal_to<>{});
 }
-//
+//add_unique_after done//
 template<typename _Ty>
 template<typename _Pred1>
 bool single_linked_list<_Ty>::add_unique_after(const_iterator pos, const _Ty& data,
@@ -1095,6 +1118,7 @@ void single_linked_list<_Ty>::remove_if(_Pred1 _Pred) {
 //swap func done//
 template<typename _Ty>
 void single_linked_list<_Ty>::swap(single_linked_list<_Ty>& other) noexcept {
+	//self swap will not cause any problems
 	std::swap(head, other.head);
 	std::swap(tail, other.tail);
 	std::swap(count, other.count);
@@ -1136,6 +1160,9 @@ single_linked_list<_Ty>& single_linked_list<_Ty>::operator=(const single_linked_
 		list_node* prev2{ nullptr };
 		list_node* curr1{ head };
 		list_node* curr2{ other.head };
+		//warning if in this part the copying somehow fails
+		//the list migh be partially modified, some elements
+		//may change,be careful
 		while (curr1 != nullptr && curr2 != nullptr) {
 			curr1->data = curr2->data;
 			prev1 = curr1;
@@ -1144,7 +1171,8 @@ single_linked_list<_Ty>& single_linked_list<_Ty>::operator=(const single_linked_
 			curr2 = curr2->next;
 		}
 		if (prev1 == nullptr && curr2 != nullptr || curr2 != nullptr && curr1 == nullptr) {
-			try {
+			try {//if push_back goes wrong dealloc everything that
+				//we might have allocated and return
 				while (curr2 != nullptr) {
 					if (!push_back(curr2->data)) {
 						clear();
@@ -1159,10 +1187,12 @@ single_linked_list<_Ty>& single_linked_list<_Ty>::operator=(const single_linked_
 			return *this;
 		}
 		if (prev2 == nullptr && curr1 != nullptr) {
+			//the other is empty clear everything
 			clear();
 			return *this;
 		}
 		if (curr1 != nullptr && curr2 == nullptr) {//size>other.size,sbhse perittous
+			//delete the extra list nodes that we have
 			prev1->next = nullptr;
 			tail = prev1;
 			while (curr1 != nullptr) {
@@ -1181,8 +1211,9 @@ single_linked_list<_Ty>& single_linked_list<_Ty>::operator=(const single_linked_
 template<typename _Ty>
 single_linked_list<_Ty>& single_linked_list<_Ty>::operator=(single_linked_list<_Ty>
 	&& other) & noexcept {
-	//we just swap the pointer pretty much we steal the data
-	//attention if we move to ourselves we lose our data 
+	//we just swap the pointers pretty much we steal the data of the other
+	//attention, if we move to ourselves we lose our data 
+	//be careful how you move things
 	clear();
 	std::swap(head, other.head);
 	std::swap(count, other.count);
@@ -1213,6 +1244,9 @@ single_linked_list<_Ty>& single_linked_list<_Ty>::operator=(const std::initializ
 	list_node* curr1{ head };
 	const _Ty* prev2{ nullptr };
 	const _Ty* curr2{ other.begin() };
+	//warning if in this part the copying somehow fails
+	//the list migh be partially modified, some elements
+	//may change,be careful
 	while (curr1 != nullptr && curr2 != other.end()) {
 		curr1->data = *curr2;
 		prev1 = curr1;
@@ -1220,8 +1254,9 @@ single_linked_list<_Ty>& single_linked_list<_Ty>::operator=(const std::initializ
 		curr1 = curr1->next;
 		curr2++;
 	}
-	if (prev1 == nullptr &&curr2 != other.end() || curr1 == nullptr && curr2 != other.end()) {
-		try {
+	if (prev1 == nullptr && curr2 != other.end() || curr1 == nullptr && curr2 != other.end()) {
+		try {//if push_back goes wrong dealloc everything that
+			//we might have allocated and return
 			while (curr2 != other.end()) {
 				if (!push_back(*curr2)) {
 					clear();
@@ -1236,10 +1271,12 @@ single_linked_list<_Ty>& single_linked_list<_Ty>::operator=(const std::initializ
 		return *this;
 	}
 	if (prev2 == nullptr && curr1 != nullptr) {
+		//the other is empty clear everything
 		clear();
 		return *this;
 	}
 	if (curr1 != nullptr && curr2 == other.end()) {
+		//delete the extra list nodes that we have
 		prev1->next = nullptr;
 		tail = prev1;
 		while (curr1 != nullptr) {
@@ -1314,4 +1351,8 @@ template<typename _Ty>
 bool single_linked_list<_Ty>::erase_after(const_iterator pos) {
 	return erase(pos);
 }
+
+//-----------------------
+//		IMPLEMENTATION END
+//-----------------------
 _PANAGIOTIS_END
