@@ -681,15 +681,10 @@ private:
 			"destructible without throwing");
 		if (pos.ptr == nullptr || pos.ptr->next == nullptr)return false;
 		list_node* curr{ head };
-		bool is_valid = false;
-		while (curr != nullptr) {
-			if (pos.ptr == curr) {
-				is_valid = true;
-				break;
-			}
+		while (curr != nullptr&&curr!=pos.ptr) {
 			curr = curr->next;
 		}
-		if (!is_valid) {
+		if (!curr) {
 			throw not_a_valid_position{ "tried to insert element at an invalid"
 								 "position" };
 		}
