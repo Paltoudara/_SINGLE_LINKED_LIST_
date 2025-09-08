@@ -155,7 +155,7 @@ also this data structure accepts only elements that are nothrow destructible.
 
 10) reverse,this function just reverses the list in place ,if the list is like 1 2 3 the result will be 3 2 1 the reverse process goes like this: 123->213->321
 
-11) insert_after,this function takes an argument pos and a copy of value to insert it after the pos  ,if the pos points to nothing then nothing happens ,if the position is invalid or doesn't belong in the list that called the method an exception will be thrown not_a_valid_position exception
+11) insert_after,this function takes an argument pos and a copy of value to insert it after the pos  ,if the pos points to nothing then nothing happens ,if the position is invalid or doesn't point to a valid node in the list that called the method an exception will be thrown not_a_valid_position exception
 
 12) add_unique_after has exactly the same behavior as the insert_after function ,the only thing that is different is that if the element is already at the list and we can see this with the help of a comparator passed to this function ,then nothing happens to the list (see implementation for more details of how this works)
 
@@ -185,11 +185,11 @@ also this data structure accepts only elements that are nothrow destructible.
 
 25) is_sorted only tells if the list is sorted or not ,either in  ascending order or descending order using a comparator passed as argument  (strong exception guarantee) (see implementation for more details of how this works)
 
-26) merge ,this function merges two lists if they are both in ascending order and the other argument is not empty ,also we can't merge into ourselves ,if something goes wrong the behavior is complicated (see implementation for more details of how this works) and read it very carefully ,WARNING:the comparator used to merge the list in order to compare elements must not throw otherwise the behavior is undefined
+26) merge ,this function merges two lists if they are both in ascending order and the other argument is not empty ,also we can't merge into ourselves ,if something goes wrong the behavior is complicated (see implementation for more details of how this works) and read it very carefully ,WARNING:the comparator used to merge the list in order to compare elements must not throw!!!
 
-27) erase_after ,this function takes an iterator pos and deletes the element after this position you gave,if the position is invalid or doesn't belong in the list that called the method an exception will be thrown not_a_valid_position exception
+27) erase_after ,this function takes an iterator pos and deletes the element after this position you gave,if the position is invalid or doesn't point to a valid node in the list that called the method an exception will be thrown not_a_valid_position exception
 
-28) unsafe_insert,this function does the same thing as the insert_after function but the only difference is that it doesn' check (for performance reasons) if the iterator passed is invalid or doesn't point to the list that called the method,use this func if you know exactly that the iterator you passed is valid and it shows in the list that called the method be very careful ,otherwise the behavior is undefined
+28) unsafe_insert,this function does the same thing as the insert_after function but the only difference is that it doesn' check (for performance reasons) if the iterator passed is invalid or doesn't point to a valid node of the list that called the method,use this func if you know exactly that the iterator you passed is valid and it shows in the list that called the method be very careful ,otherwise the behavior is undefined
 
 29) unsafe_erase is the same case as erase_after and has the same concept idea as unsafe_insert,use this func with care because it doesn't make checks (this is for performance purposes)
 
