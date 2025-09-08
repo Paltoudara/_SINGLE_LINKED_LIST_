@@ -404,6 +404,7 @@ private:
 		list_node* curr{ head };
 		bool  is_valid = false;
 		while (curr != nullptr) {
+			if (_Pred(std::as_const(curr->data), std::as_const(data)))return false;
 			if (curr == pos.ptr) {
 				is_valid = true;
 				break;
@@ -415,7 +416,6 @@ private:
 			throw not_a_valid_position{ "tried to insert element at an invalid"
 										"position" };
 		}
-		curr = head;
 		while (curr != nullptr) {
 			if (_Pred(std::as_const(curr->data), std::as_const(data)))return false;
 			curr = curr->next;
