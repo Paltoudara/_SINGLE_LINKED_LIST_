@@ -1147,7 +1147,7 @@ single_linked_list<_Ty>& single_linked_list<_Ty>::operator=(const single_linked_
 	static_assert(std::is_copy_assignable_v<_Ty>, "you must be able to make this operation"
 		"curr1->data=curr2->data");
 	static_assert(std::is_nothrow_destructible_v<_Ty>, "the type must be destructible without throwing");
-	if (this != &other) {
+	if (this == &other) {return *this;}
 		list_node* prev1{ nullptr };
 		list_node* prev2{ nullptr };
 		list_node* curr1{ head };
@@ -1196,7 +1196,7 @@ single_linked_list<_Ty>& single_linked_list<_Ty>::operator=(const single_linked_
 			return *this;
 		}
 
-	}
+	
 	return *this;
 }
 //move operator func done// 
