@@ -567,8 +567,7 @@ private:
 		list_node* ptr{ Head };
 		list_node* curr1{ head };
 		list_node* curr2{ other.head };
-		//the comparator should not throw otherwise 
-		//the behavior is undefined
+		//WARNING:the comparator must not throw  
 		try {
 			while (curr1 != nullptr && curr2 != nullptr) {
 				if (comp(std::as_const(curr1->data), std::as_const(curr2->data))) {
