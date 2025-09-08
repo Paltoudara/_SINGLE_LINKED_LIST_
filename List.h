@@ -361,10 +361,8 @@ private:
 		//element succesfully
 		if (pos == nullptr)return false;
 		list_node* curr{ head };
-		while (curr != nullptr) {
-			if (curr == pos.ptr) {
-				break;
-			}//we see if the pos.ptr address is the same
+		while (curr != nullpt&&curr!=pos.ptr) {
+			//we see if the pos.ptr address is the same
 			//with the nodes of our list if it is not then it is not a valid pos 
 			curr = curr->next;
 		}
@@ -400,11 +398,9 @@ private:
 		//the _Pred arg should not throw
 		if (pos == nullptr)return false;
 		list_node* curr{ head };
-		while (curr != nullptr) {
+		while (curr != nullptr&&curr!=pos.ptr) {
 			if (_Pred(std::as_const(curr->data), std::as_const(data)))return false;
-			if (curr == pos.ptr) {
-				break;
-			}//we see if the pos.ptr address is the same
+			//we see if the pos.ptr address is the same
 			//with the nodes of our list if it is not then it is not a valid pos 
 			//at the same time we see if the list already contains this item
 			//that we are going to add
