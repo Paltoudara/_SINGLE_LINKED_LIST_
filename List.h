@@ -585,7 +585,7 @@ private:
 		}
 		catch (...) {
 			delete ptr;//no memory leak
-			throw 1;
+			std::abort();
 		}
 		//whatever left we just give it because we now have only onel list
 		if (curr1 == nullptr && curr2 != nullptr) {
