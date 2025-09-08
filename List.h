@@ -359,18 +359,16 @@ private:
 		//1)if pos is invalid we throw exception
 		//2)if pos point to our list to a valid node then we insert the
 		//element succesfully
-		if (pos == cend())return false;
+		if (pos == nullptr)return false;
 		list_node* curr{ head };
-		bool is_valid = false;
 		while (curr != nullptr) {
 			if (curr == pos.ptr) {
-				is_valid = true;
 				break;
 			}//we see if the pos.ptr address is the same
 			//with the nodes of our list if it is not then it is not a valid pos 
 			curr = curr->next;
 		}
-		if (!is_valid) {
+		if (!curr) {
 			throw not_a_valid_position{ "tried to insert element at an invalid"
 										"position" };
 		}
@@ -400,13 +398,11 @@ private:
 		//this _Pred must be a func that can be called with two const _Ty& args 
 		//and the return type must be bool else the behavior is undefined
 		//the _Pred arg should not throw
-		if (pos == cend())return false;
+		if (pos == nullptr)return false;
 		list_node* curr{ head };
-		bool  is_valid = false;
 		while (curr != nullptr) {
 			if (_Pred(std::as_const(curr->data), std::as_const(data)))return false;
 			if (curr == pos.ptr) {
-				is_valid = true;
 				break;
 			}//we see if the pos.ptr address is the same
 			//with the nodes of our list if it is not then it is not a valid pos 
@@ -414,7 +410,7 @@ private:
 			//that we are going to add
 			curr = curr->next;
 		}
-		if (!is_valid) {
+		if (!curr) {
 			throw not_a_valid_position{ "tried to insert element at an invalid"
 										"position" };
 		}
