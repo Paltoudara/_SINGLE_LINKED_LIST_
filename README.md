@@ -201,7 +201,7 @@ also this data structure accepts only elements that are nothrow destructible.
 
 33) back,gives the last element of the list
 
-34) begin,end is for the iterator API (see implementation for more details of how this works) but begin is the start of the list,and end is the end of the list
+34) begin,end,cbegin,cend is for the iterator API (see implementation for more details of how this works) but begin,cbegin is the start of the list,and end,cend is the end of the list
 
 # 📝NOTE THAT: 
 TO SEE HOW THE ITERATOR API WORKS AND THE LIST NODE API, GO TO SEE THE IMPLEMENTATION FOR MORE DETAILS
