@@ -410,6 +410,8 @@ private:
 				break;
 			}//we see if the pos.ptr address is the same
 			//with the nodes of our list if it is not then it is not a valid pos 
+			//at the same time we see if the list already contains this item
+			//that we are going to add
 			curr = curr->next;
 		}
 		if (!is_valid) {
